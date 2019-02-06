@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package rpcftp;
+
+// protoc -I rpcftp --go_out=plugins=grpc:rpcftp rpcftp/rpcftp.proto
+
+service Rpcftp {
+  rpc Upload (stream Chunk) returns (UploadStatus) {}
+  rpc Download (DownloadRequest) returns (stream Chunk) {}
+}
+
+// File transfer message
+message Chunk {
+  string FileName = 1;
+  bytes Content = 2;
+}
+
+enum UploadStatusCode {
+  Unknown = 0;
+  Ok = 1;
+  Failed = 2;
+}
+
+message UploadStatus {
+  string Message = 1;
+  UploadStatusCode code = 2;
+}
+
+message DownloadRequest {
+  string Path = 1;
+}
